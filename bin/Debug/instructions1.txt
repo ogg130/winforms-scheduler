@@ -1,0 +1,18 @@
+﻿----(Rubric A) Login Page
+
+	○ The app will open into the login screen. You may login as anyone, but to test all features in the best possible manner you should login 
+	  as Dunder Mifflin's best paper salesman, Jim Halpert (username: jhalpert / password: pam).
+	○ The custom login page language is French - fr-fr. The apps native language is English.
+
+----(Rubric B) Add/Update/Delete customer records including name/address/phone number
+
+	○ You can launch the add/modify customers screen from the Customers menu option in any application or by clicking the 
+	  chevrons to the right of the Customer ID field in the Appointments screen.
+
+		○ Customers can only be deleted if they are not in use in other records.
+
+	○ You can launch the add/modify addresses screen from the Addresses menu option in any application or by clicking the 
+	  chevrons to the right of the Address ID field in the Customers screen.
+
+		○ Addresses can only be deleted if they are not in use in other records.
+		○ Addresses can only be modified if they are not in use in other records.
