@@ -352,7 +352,7 @@ namespace RobertOgden
             try
             {
                 // Validate inputs / Decorate inputs with bad data
-                //ValidateInput();
+                ValidateInput();
 
                 // Store all textbox data entry in a dictionary
                 var formData = new Dictionary<string, string>
@@ -391,6 +391,9 @@ namespace RobertOgden
                     _scheduler.AddAppointment(appointment, DgvAppointments);
                     SharedUtils.AddReminder(appointment, TmrReminders, _reminders); // Add the new reminder
                     PrepareForm("VIEW", "Add Appointment", "Delete Appointment", true); // Reset the form to VIEW mode
+
+                    // Display the new record in the grid
+                    SharedUtils.HandleSearch(DgvAppointments, _scheduler, appointment.AppointmentId.ToString(), true);
                 }
 
                 // Return true - success
@@ -630,6 +633,10 @@ namespace RobertOgden
             {
                 // Delete if confirmed
                 _scheduler.DeleteAppointment(appointment, DgvAppointments);
+                
+                // Select the first record in the grid
+                DgvAppointments.Rows[0].Selected = true; 
+                DgvAppointments.CurrentCell = DgvAppointments.Rows[0].Cells[3];          
             }
             else
             {

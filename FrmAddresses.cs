@@ -291,6 +291,10 @@ namespace RobertOgden
             {
                 // Delete the record
                 _scheduler.DeleteAddress(address, DgvAddresses);
+
+                // Select the first record in the grid
+                DgvAddresses.Rows[0].Selected = true;
+                DgvAddresses.CurrentCell = DgvAddresses.Rows[0].Cells[3];
             }
             else
             {
@@ -415,6 +419,9 @@ namespace RobertOgden
 
                     // Reset the form to VIEW mode
                     PrepareForm("VIEW", "Add Address", "Delete Address", true);
+
+                    // Select the new record in the grid
+                    SharedUtils.HandleSearch(DgvAddresses, _scheduler, address.AddressId.ToString(), true);
                 }
                 // Return true - success
                 return true;

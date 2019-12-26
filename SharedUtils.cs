@@ -502,9 +502,11 @@ namespace RobertOgden
             var endOfWeek = startOfWeek.AddDays(7);
 
             // Return the appointment list
-            return allAppointments
+            var selectedAppointments = allAppointments
                 .Where(r => r.Start >= startOfWeek && r.Start < endOfWeek)
                 .ToList();
+
+            return selectedAppointments;
         }
 
         /* Method which runs a report showing the number of appointment types per month */

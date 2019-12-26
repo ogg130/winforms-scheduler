@@ -357,7 +357,7 @@ namespace RobertOgden
             if (inUse != null)
             {
                 // Throw a warning, prevent action
-                const string MESSAGE = "You cannot delete addresses that are used in customer records.";
+                const string MESSAGE = "You cannot delete customers that are in use in other records.";
                 MessageBox.Show(MESSAGE);
                 return;
             }
@@ -448,6 +448,10 @@ namespace RobertOgden
 
                     // Reset the form to VIEW mode
                     PrepareForm("VIEW", "Add Customer", "Delete Customer", true);
+
+                    // Select the first record in the grid
+                    DgvCustomers.Rows[0].Selected = true;
+                    DgvCustomers.CurrentCell = DgvCustomers.Rows[0].Cells[3];
                 }
 
                 // Return true - success
