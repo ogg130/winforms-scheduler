@@ -72,9 +72,9 @@
             this.MnuCustomers = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuReports = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.TmrReminders = new System.Windows.Forms.Timer(this.components);
             this.MnuHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this._timers = new System.Windows.Forms.Timer(this.components);
             this.GrpCustomers.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvCustomers)).BeginInit();
             this.MnuMenu.SuspendLayout();
@@ -513,17 +513,18 @@
             this.MnuExit.Text = "E&xit";
             this.MnuExit.Click += new System.EventHandler(this.MnuExit_Click);
             // 
-            // TmrReminders
-            // 
-            this.TmrReminders.Enabled = true;
-            this.TmrReminders.Tick += new System.EventHandler(this.TmrReminders_Tick);
-            // 
             // MnuHelp
             // 
             this.MnuHelp.Name = "MnuHelp";
             this.MnuHelp.Size = new System.Drawing.Size(44, 20);
             this.MnuHelp.Text = "H&elp";
             this.MnuHelp.Click += new System.EventHandler(this.MnuHelp_Click);
+            // 
+            // _timers
+            // 
+            this._timers.Enabled = true;
+            this._timers.Interval = 1000;
+            this._timers.Tick += new System.EventHandler(this._timers_Tick);
             // 
             // FrmCustomers
             // 
@@ -536,6 +537,7 @@
             this.Name = "FrmCustomers";
             this.Text = "Customers";
             this.Load += new System.EventHandler(this.FrmCustomers_Load);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FrmCustomers_MouseMove);
             this.GrpCustomers.ResumeLayout(false);
             this.GrpCustomers.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvCustomers)).EndInit();
@@ -585,7 +587,7 @@
         private System.Windows.Forms.TextBox TxtSearch;
         private System.Windows.Forms.Button BtnSearch;
         private System.Windows.Forms.ToolTip ToolTip;
-        private System.Windows.Forms.Timer TmrReminders;
+        private System.Windows.Forms.Timer _timers;
         private System.Windows.Forms.Label LblPhone;
         private System.Windows.Forms.TextBox TxtPhone;
         private System.Windows.Forms.Label LblCity;

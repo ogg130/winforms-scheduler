@@ -33,7 +33,7 @@ namespace RobertOgden.Data.Models
                 Repository.UpdateAppointment(appointment);
 
                 // Setup variables necessary to update the appointments gridview
-                var target = this.Appointments.FirstOrDefault(a => a.CustomerId == appointment.CustomerId);
+                var target = this.Appointments.FirstOrDefault(a => a.AppointmentId == appointment.AppointmentId);
                 var index = this.Appointments.IndexOf(target);
 
                 // Update the appointments object
@@ -41,7 +41,6 @@ namespace RobertOgden.Data.Models
                 {
                     this.Appointments[index] = appointment;
                 }
-
                 // Refresh the gridview
                 grid.DataSource = typeof(BindingList<Appointment>);
                 grid.DataSource = this.Appointments;

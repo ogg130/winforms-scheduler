@@ -240,7 +240,7 @@ namespace RobertOgden
 
             //Define SQL command using params
             var command = connection.CreateCommand();
-            command.CommandText = $"DELETE FROM appointment WHERE customerId = @param";
+            command.CommandText = $"DELETE FROM appointment WHERE appointmentId = @param";
 
             // Define params
             command.Parameters.AddWithValue("@param", source.CustomerId);

@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.MnuMenu = new System.Windows.Forms.MenuStrip();
             this.MnuApplications = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuAddresses = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,6 +40,7 @@
             this.MnuCustomers = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuReports = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.GrpCalendar = new System.Windows.Forms.GroupBox();
             this.LblInstructions = new System.Windows.Forms.Label();
             this.LblOf = new System.Windows.Forms.Label();
@@ -52,8 +53,7 @@
             this.TxtSearch = new System.Windows.Forms.TextBox();
             this.BtnSearch = new System.Windows.Forms.Button();
             this.DgvCalendar = new System.Windows.Forms.DataGridView();
-            this.TmrReminders = new System.Windows.Forms.Timer(this.components);
-            this.MnuHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this._timers = new System.Windows.Forms.Timer(this.components);
             this.MnuMenu.SuspendLayout();
             this.GrpCalendar.SuspendLayout();
             this.GrpViewType.SuspendLayout();
@@ -127,6 +127,13 @@
             this.MnuExit.Size = new System.Drawing.Size(37, 20);
             this.MnuExit.Text = "E&xit";
             this.MnuExit.Click += new System.EventHandler(this.MnuExit_Click);
+            // 
+            // MnuHelp
+            // 
+            this.MnuHelp.Name = "MnuHelp";
+            this.MnuHelp.Size = new System.Drawing.Size(44, 20);
+            this.MnuHelp.Text = "H&elp";
+            this.MnuHelp.Click += new System.EventHandler(this.MnuHelp_Click);
             // 
             // GrpCalendar
             // 
@@ -257,53 +264,47 @@
             this.DgvCalendar.AllowUserToDeleteRows = false;
             this.DgvCalendar.AllowUserToResizeRows = false;
             this.DgvCalendar.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgvCalendar.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DgvCalendar.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.DgvCalendar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DgvCalendar.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DgvCalendar.DefaultCellStyle = dataGridViewCellStyle2;
             this.DgvCalendar.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.DgvCalendar.Location = new System.Drawing.Point(17, 42);
             this.DgvCalendar.MultiSelect = false;
             this.DgvCalendar.Name = "DgvCalendar";
             this.DgvCalendar.ReadOnly = true;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgvCalendar.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DgvCalendar.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.DgvCalendar.RowHeadersVisible = false;
             this.DgvCalendar.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DgvCalendar.Size = new System.Drawing.Size(954, 298);
             this.DgvCalendar.TabIndex = 4;
             this.DgvCalendar.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DgvCalendar_CellMouseDoubleClick);
             // 
-            // TmrReminders
+            // _timers
             // 
-            this.TmrReminders.Enabled = true;
-            this.TmrReminders.Tick += new System.EventHandler(this.TmrReminders_Tick);
-            // 
-            // MnuHelp
-            // 
-            this.MnuHelp.Name = "MnuHelp";
-            this.MnuHelp.Size = new System.Drawing.Size(44, 20);
-            this.MnuHelp.Text = "H&elp";
-            this.MnuHelp.Click += new System.EventHandler(this.MnuHelp_Click);
+            this._timers.Enabled = true;
+            this._timers.Interval = 1000;
+            //this._timers.Tick += new System.EventHandler(this._timers_Tick);
             // 
             // FrmCalendar
             // 
@@ -316,6 +317,7 @@
             this.Name = "FrmCalendar";
             this.Text = "Calendar";
             this.Load += new System.EventHandler(this.FrmCalendar_Load);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FrmCalendar_MouseMove);
             this.MnuMenu.ResumeLayout(false);
             this.MnuMenu.PerformLayout();
             this.GrpCalendar.ResumeLayout(false);
@@ -348,7 +350,7 @@
         private System.Windows.Forms.RadioButton RdoWeek;
         private System.Windows.Forms.RadioButton RdoMonth;
         private System.Windows.Forms.Label LblInstructions;
-        private System.Windows.Forms.Timer TmrReminders;
+        private System.Windows.Forms.Timer _timers;
         private System.Windows.Forms.ToolStripMenuItem MnuAddresses;
         private System.Windows.Forms.ToolStripMenuItem MnuHelp;
     }

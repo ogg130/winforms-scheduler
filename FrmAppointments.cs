@@ -10,19 +10,20 @@ namespace RobertOgden
     public partial class FrmAppointments : Form
     {
         private readonly Scheduler _scheduler = new Scheduler(); // Scheduler data
-        private List<string> _reminders = new List<string>();  // Reminder data
+        private List<string> _reminders;  // Reminder data
         private string _state = "VIEW"; // The state of the form
         private bool _firstLoad = true; // Flag to indicate if this is the first load of the screen
         private readonly int _userId; // The currently logged in users user ID
         private readonly string _currentUser; // The currently logged in users name
         private readonly int _appoinmentId; // Appointmnet ID that gets passed into the form
+        private Timer _timer;
 
         public FrmAppointments()
         {
             InitializeComponent();
         }
 
-        public FrmAppointments(Scheduler scheduler, int userId, List<string> reminders, int appointmentId)
+        public FrmAppointments(Scheduler scheduler, int userId, List<string> reminders, int appointmentId, Timer timer)
         {
             InitializeComponent();
 
@@ -31,12 +32,13 @@ namespace RobertOgden
             _scheduler = scheduler;
             _reminders = reminders;
             _appoinmentId = appointmentId;
+            _timer = timer;
             _currentUser = _scheduler.Users.FirstOrDefault(r => r.UserId == _userId).UserName;
 
             PopulateDataBoundControls(true); //Populate data bound controls
         }
 
-        public FrmAppointments(Scheduler scheduler, int userId, List<string> reminders)
+        public FrmAppointments(Scheduler scheduler, int userId, List<string> reminders, Timer timer)
         {
             InitializeComponent();
 
@@ -44,6 +46,7 @@ namespace RobertOgden
             _userId = userId;
             _scheduler = scheduler;
             _reminders = reminders;
+            _timer = timer;
             _currentUser = _scheduler.Users.FirstOrDefault(r => r.UserId == _userId).UserName;
 
             PopulateDataBoundControls(); //Populate data bound controls
@@ -132,30 +135,25 @@ namespace RobertOgden
         private void MnuCalendar_Click(object sender, EventArgs e)
         {
             // Hide current form, show new form
-            SharedUtils.OpenForm(this, new FrmCalendar(_scheduler, _userId, _reminders));
+            SharedUtils.OpenForm(this, new FrmCalendar(_scheduler, _userId, _reminders, _timer));
         }
 
         private void MnuCustomers_Click(object sender, EventArgs e)
         {
             // Hide current form, show new form
-            SharedUtils.OpenForm(this, new FrmCustomers(_scheduler, _userId, _reminders));
+            SharedUtils.OpenForm(this, new FrmCustomers(_scheduler, _userId, _reminders, _timer));
         }
 
         private void MnuReports_Click(object sender, EventArgs e)
         {
             // Hide current form, show new form
-            SharedUtils.OpenForm(this, new FrmReports(_scheduler, _userId, _reminders));
-        }
-
-        private void TmrReminders_Tick(object sender, EventArgs e)
-        {
-            SharedUtils.ReminderCheck(_reminders, TmrReminders);
+            SharedUtils.OpenForm(this, new FrmReports(_scheduler, _userId, _reminders, _timer));
         }
 
         private void MnuAddresses_Click(object sender, EventArgs e)
         {
             // Hide current form, show new form
-            SharedUtils.OpenForm(this, new FrmAddresses(_scheduler, _userId, _reminders));
+            SharedUtils.OpenForm(this, new FrmAddresses(_scheduler, _userId, _reminders, _timer));
         }
 
         private void BtnLaunch_Click(object sender, EventArgs e)
@@ -382,14 +380,14 @@ namespace RobertOgden
                 {
                     // Update the appointment
                     _scheduler.UpdateAppointment(appointment, DgvAppointments);
-                    SharedUtils.ModifyReminder(appointment, TmrReminders, _reminders); // Modify the reminder if changed
-                    _reminders = _reminders.OrderBy(r => DateTime.Parse(r.Split('-')[0])).ToList(); // Sort reminders
+                    SharedUtils.ModifyReminder(appointment, _timers, _reminders); // Modify the reminder if changed
+                    //_reminders = _reminders.OrderBy(r => DateTime.Parse(r.Split('-')[0])).ToList(); // Sort reminders
                 }
                 else //If this is an add
                 {
                     // Add the appointment
                     _scheduler.AddAppointment(appointment, DgvAppointments);
-                    SharedUtils.AddReminder(appointment, TmrReminders, _reminders); // Add the new reminder
+                    SharedUtils.AddReminder(appointment, _timers, _reminders); // Add the new reminder
                     PrepareForm("VIEW", "Add Appointment", "Delete Appointment", true); // Reset the form to VIEW mode
 
                     // Display the new record in the grid
@@ -424,7 +422,7 @@ namespace RobertOgden
             CboUserId.SelectedValue = appointment.UserId;
             CboCustomerId.SelectedValue = appointment.CustomerId;
             TxtUserName.Text = SharedUtils.UpdateName(CboUserId, _scheduler.Users);
-            TxtCustomerName.Text = SharedUtils.UpdateName(CboCustomerId, _scheduler.Users);
+            TxtCustomerName.Text = SharedUtils.UpdateName(CboCustomerId, _scheduler.Customers);
             TxtDescription.Text = appointment.Description.ToString();
             TxtLocation.Text = appointment.Location.ToString();
             TxtContact.Text = appointment.Contact.ToString();
@@ -538,7 +536,6 @@ namespace RobertOgden
             if (fromCalendar == true)
             {
                 SharedUtils.HandleSearch(DgvAppointments, _scheduler, _appoinmentId.ToString(), true);
-                //DgvAppointments.Rows[0].Selected = SharedUtils.GetId(_appoinmentId.ToString(), DgvAppointments);
             }
 
             // Hide unnecessary columns
@@ -609,7 +606,7 @@ namespace RobertOgden
             InitDataEntryFields();
 
             //Get the next recordID in sequence and set the default appointmentId using it
-            var nextId = SharedUtils.GetIds(DgvAppointments).Max() + 1;
+            var nextId = SharedUtils.GetNextId(DgvAppointments);
             TxtAppointmentId.Text = nextId.ToString();
 
             // Exit
@@ -633,10 +630,10 @@ namespace RobertOgden
             {
                 // Delete if confirmed
                 _scheduler.DeleteAppointment(appointment, DgvAppointments);
-                
+                SharedUtils.DeleteReminder(appointment, _timers, _reminders);
                 // Select the first record in the grid
-                DgvAppointments.Rows[0].Selected = true; 
-                DgvAppointments.CurrentCell = DgvAppointments.Rows[0].Cells[3];          
+                DgvAppointments.Rows[0].Selected = true;
+                DgvAppointments.CurrentCell = DgvAppointments.Rows[0].Cells[3];
             }
             else
             {
@@ -687,7 +684,7 @@ namespace RobertOgden
 
                 if (response == DialogResult.Yes)
                 {
-                    SharedUtils.OpenForm(this, new FrmCustomers(_scheduler, _userId, _reminders));
+                    SharedUtils.OpenForm(this, new FrmCustomers(_scheduler, _userId, _reminders, _timer));
                 }
             }
 
@@ -699,22 +696,26 @@ namespace RobertOgden
                 if (response == DialogResult.Yes)
                 {
                     // Hide the current form, open the form that has been selected from the menu
-                    SharedUtils.OpenForm(this, new FrmCustomers(_scheduler, _userId, _reminders));
+                    SharedUtils.OpenForm(this, new FrmCustomers(_scheduler, _userId, _reminders, _timer));
                 }
             }
 
             // If the form state is in VIEW mode
             if (_state == "VIEW")
             {
-                SharedUtils.OpenForm(this, new FrmCustomers(_scheduler, _userId, _reminders));
+                SharedUtils.OpenForm(this, new FrmCustomers(_scheduler, _userId, _reminders, _timer));
             }
         }
 
         private void MnuHelp_Click(object sender, EventArgs e)
         {
-            // Show help form
-            var form = new FrmHelp();
+            var form = new FrmHelp(_reminders, _scheduler, _timer);
             form.ShowDialog();
+        }
+
+        private void FrmAppointments_MouseMove(object sender, MouseEventArgs e)
+        {
+            SharedUtils.RestartTimer(_timer);
         }
     }
 }

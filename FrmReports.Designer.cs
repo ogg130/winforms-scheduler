@@ -144,7 +144,7 @@
             this.LblInstructions.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.LblInstructions.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LblInstructions.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.LblInstructions.Location = new System.Drawing.Point(180, 13);
+            this.LblInstructions.Location = new System.Drawing.Point(270, 13);
             this.LblInstructions.Name = "LblInstructions";
             this.LblInstructions.Size = new System.Drawing.Size(425, 20);
             this.LblInstructions.TabIndex = 1;
@@ -231,6 +231,7 @@
             this.Controls.Add(this.MnuMenu);
             this.Name = "FrmReports";
             this.Text = "FrmReports";
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FrmReports_MouseMove);
             this.MnuMenu.ResumeLayout(false);
             this.MnuMenu.PerformLayout();
             this.GrpReports.ResumeLayout(false);

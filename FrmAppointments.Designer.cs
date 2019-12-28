@@ -83,11 +83,11 @@
             this.MnuCustomers = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuReports = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.LblHeader = new System.Windows.Forms.Label();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.TmrReminders = new System.Windows.Forms.Timer(this.components);
-            this.MnuHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this._timers = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.DgvAppointments)).BeginInit();
             this.GrpAppointmentData.SuspendLayout();
             this.MnuMenu.SuspendLayout();
@@ -641,6 +641,13 @@
             this.MnuExit.Text = "E&xit";
             this.MnuExit.Click += new System.EventHandler(this.MnuExit_Click);
             // 
+            // MnuHelp
+            // 
+            this.MnuHelp.Name = "MnuHelp";
+            this.MnuHelp.Size = new System.Drawing.Size(44, 20);
+            this.MnuHelp.Text = "H&elp";
+            this.MnuHelp.Click += new System.EventHandler(this.MnuHelp_Click);
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.GrpAppointmentData);
@@ -663,17 +670,11 @@
             this.LblHeader.TabIndex = 0;
             this.LblHeader.Text = "Appointments:";
             // 
-            // TmrReminders
+            // _timers
             // 
-            this.TmrReminders.Enabled = true;
-            this.TmrReminders.Tick += new System.EventHandler(this.TmrReminders_Tick);
-            // 
-            // MnuHelp
-            // 
-            this.MnuHelp.Name = "MnuHelp";
-            this.MnuHelp.Size = new System.Drawing.Size(44, 20);
-            this.MnuHelp.Text = "H&elp";
-            this.MnuHelp.Click += new System.EventHandler(this.MnuHelp_Click);
+            this._timers.Enabled = true;
+            this._timers.Interval = 1000;
+            //this._timers.Tick += new System.EventHandler(this._timers_Tick);
             // 
             // FrmAppointments
             // 
@@ -689,6 +690,7 @@
             this.Name = "FrmAppointments";
             this.Text = "Appointments";
             this.Load += new System.EventHandler(this.FrmAppointments_Load);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FrmAppointments_MouseMove);
             ((System.ComponentModel.ISupportInitialize)(this.DgvAppointments)).EndInit();
             this.GrpAppointmentData.ResumeLayout(false);
             this.GrpAppointmentData.PerformLayout();
@@ -753,7 +755,7 @@
         private System.Windows.Forms.Label LblUserName;
         private System.Windows.Forms.TextBox TxtUserName;
         private System.Windows.Forms.ToolTip ToolTip;
-        public System.Windows.Forms.Timer TmrReminders;
+        public System.Windows.Forms.Timer _timers;
         private System.Windows.Forms.ToolStripMenuItem MnuAddresses;
         private System.Windows.Forms.Button BtnLaunch;
         private System.Windows.Forms.ToolStripMenuItem MnuHelp;

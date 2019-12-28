@@ -1,10 +1,8 @@
-﻿using MySql.Data.MySqlClient;
-using RobertOgden.Data.Models;
+﻿using RobertOgden.Data.Models;
 using RobertOgden.Data.Models.Reports;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -18,18 +16,20 @@ namespace RobertOgden
 
         public static void AddReminder(Appointment appointment, Timer timer, List<string> reminders)
         {
+            var start = appointment.Start;
+            var minus15 = start.AddMinutes(-15);
+            // If this reminder is before the current time
+            if (minus15 < DateTime.Now)
+            {
+                // Exit, no reminder is created
+                return;
+            }
+
             // Setup reminder text
             string reminderText = SetReminderText(appointment);
 
-            // If the timer is not enabled because there are no reminders
-            if (!timer.Enabled)
-            {
-                // Start the timer
-                timer.Start();
-            }
-
             // Add the new reminder and sort the reminders object
-            reminders.Add(reminderText);
+            reminders.Insert(0, reminderText);
             _ = reminders.OrderBy(r => DateTime.Parse(r.Split('-')[0])).ToList();
         }
 
@@ -47,6 +47,29 @@ namespace RobertOgden
             return reminderText;
         }
 
+        /* Method which is used to display reminders if they occur during the timer tick */
+
+        public static void ReminderCheck(List<string> reminders, Scheduler scheduler, Timer timer)
+        {
+            // Split the reminder on -
+            var reminder = reminders[0].Split('-');
+            var start = reminder[0];
+            var title = reminder[1];
+            var description = reminder[2];
+            var customerId = reminder[4];
+            var customerName = scheduler.Customers.FirstOrDefault(r => r.CustomerId.ToString() == customerId).CustomerName.ToString();
+
+            // If the start date extracted from the reminder is the same time as now
+            if (start == DateTime.Now.ToString())
+            {
+                // Remove the reminder, display message
+                reminders.RemoveAt(0);
+                var message = $"The following meeting is occuring in 15 minutes:\n\nTitle: {title} \nDescription: {description} \nCustomer: {customerName}";
+                timer.Stop();
+                MessageBox.Show(message);
+            }
+        }
+
         /* Method which modifies exisiting reminder text */
 
         public static void ModifyReminder(Appointment appointment, Timer timer, List<string> reminders)
@@ -57,11 +80,10 @@ namespace RobertOgden
             var start = appointment.Start.AddMinutes(-15).ToString();
 
             // If the timer is not enabled because there are no reminders
-            if (!timer.Enabled)
+            if (reminders.Count == 0)
             {
                 // Add the reminder and start the timer
                 reminders.Add(reminderText);
-                timer.Start();
             }
             else // If the timer is enabled because there are reminders
             {
@@ -74,8 +96,53 @@ namespace RobertOgden
                     // If a reminder has a valid start date change and already exists
                     if ((reminderId == id.ToString()) && (reminderStart != start))
                     {
+                        // If this reminder is before the current time
+                        if (appointment.Start.AddMinutes(-15) < DateTime.Now)
+                        {
+                            // Exit, no reminder is created
+                            return;
+                        }
                         // Update the reminder with the new date
                         reminders[i] = reminderText;
+                        return;
+                    }
+                }
+
+                // If you have returned, no reminder needed to be created
+                // or the reminder that existed was updated. Now, the only
+                // remaining option is that a past record that didnt alread
+                // have a reminder is being modified. If so, the reminder
+                // needs to be added:
+
+                reminders.Insert(0, reminderText);
+                _ = reminders.OrderBy(r => DateTime.Parse(r.Split('-')[0])).ToList();
+            }
+        }
+
+        /* Method which deletes a reminder */
+
+        public static void DeleteReminder(Appointment appointment, Timer timer, List<string> reminders)
+        {
+            var id = appointment.AppointmentId;
+
+            // If the timer is not enabled because there are no reminders
+            if (reminders.Count == 0)
+            {
+                // There is nothing to be doing, exit
+                return;
+            }
+            else // If the timer is enabled because there are reminders
+            {
+                //iterate over each reminder
+                for (var i = 0; i < reminders.Count; ++i)
+                {
+                    var reminderId = reminders[i].Split('-')[3]; // Extract appointment ID from reminder
+
+                    // If a reminder matching the id is found
+                    if (reminderId == id.ToString())
+                    {
+                        // Update the reminder with the new date
+                        reminders.RemoveAt(i);
                     }
                 }
             }
@@ -90,6 +157,17 @@ namespace RobertOgden
             source.Hide();
             target.ShowDialog();
             source.Close();
+        }
+
+        /* Method which recieves a datagridview object and returns the next ID in
+ * sequence to use with an add*/
+
+        public static int GetNextId(DataGridView grid)
+        {
+            var rows = grid.Rows; // Rows
+            var topRow = rows[rows.Count - 1].Cells[0].Value; // Top ID value
+            var converted = Convert.ToInt32(topRow) + 1; // Add one
+            return converted; // Return it
         }
 
         /* Method which recieves a datagridview object and returns a list of
@@ -155,16 +233,8 @@ namespace RobertOgden
             var utcTime = new DateTimeOffset(formattedDate, offSet);
 
             // Set users timezone from windows settings
-            var timeZoneId = TimeZoneInfo.Local.Id;
-            var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
-            var isDst = DateTime.Now.IsDaylightSavingTime();
-
-            // If daylight savings time is being used
-            if (isDst)
-            {
-                // Add one hour to the time
-                utcTime = utcTime.AddHours(1);
-            }
+            var timeZone = TimeZoneInfo.Local;
+            var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZone.Id);
 
             // Convert UTC offset time to the users local time
             var userOffset = TimeZoneInfo.ConvertTime(utcTime, userTimeZone);
@@ -241,8 +311,8 @@ namespace RobertOgden
         {
             if (input.Text == "")
             {
-                const string MESSAGE = "Value must be filled out";
-                NotValid(label, MESSAGE, toolTip);
+                var message = $"Value for {label.Text} must be filled out";
+                NotValid(label, message, toolTip);
                 return;
             }
             Valid(label, toolTip);
@@ -256,8 +326,8 @@ namespace RobertOgden
         {
             if (input.SelectedIndex == -1)
             {
-                const string MESSAGE = "Value must be selected";
-                NotValid(label, MESSAGE, toolTip);
+                var message = $"Value for {label.Text} must be selected";
+                NotValid(label, message, toolTip);
                 return;
             }
             Valid(label, toolTip);
@@ -328,7 +398,7 @@ namespace RobertOgden
                 return; // Exit
             }
 
-            // Iterate over all rows in the grid
+            // Iterate over all rows
             for (var i = 0; i < rows.Count; ++i)
             {
                 // if the record Id we've calculated matches the current iterations recordid column
@@ -338,33 +408,6 @@ namespace RobertOgden
                     grid.CurrentCell = rows[i].Cells[3]; // Select the matched cell
                     break;
                 }
-            }
-        }
-
-        /* Method which is used to display reminders if they occur during the timer tick */
-
-        public static void ReminderCheck(List<string> reminders, Timer timer)
-        {
-            // If there are no reminders
-            if (reminders.Count == 0)
-            {
-                // Stop the timer and exit
-                timer.Stop();
-                return;
-            }
-
-            // Split the reminder on -
-            var reminder = reminders[0].Split('-');
-
-            // If the start date extracted from the reminder is the same time as now
-            if (reminder[0] == DateTime.Now.ToString())
-            {
-                // Stop the timer to prevent conflicts with removal, show the reminder, remove it, start the timer
-                timer.Stop();
-                var message = $"The following meeting is occuring in 15 minutes:\nTitle: {reminder[1]} \nDescription: {reminder[2]} \nCustomer: {reminder[4]}";
-                MessageBox.Show(message);
-                reminders.RemoveAt(0);
-                timer.Start();
             }
         }
 
@@ -426,17 +469,44 @@ namespace RobertOgden
             // Query the appointment table, return results into scheduler.appointments
             scheduler.Appointments = Repository.PopulateAppointments();
 
-            // Query the customer table, return results into scheduler.customers
+            // Populate defaults
+            scheduler.Users = Repository.PopulateDefaults(new User());
+            FormatDates(scheduler.Users); // Format dates to local timezone
+
+            // Populate defaults
             scheduler.Customers = Repository.PopulateDefaults(new Customer());
+            FormatDates(scheduler.Customers); // Format dates to local timezone
 
-            // Query the city table, retrn the results into scheculer.cities
-            scheduler.Cities = Repository.PopulateDefaults(new City());
-
-            // Query the country table, retrn the results into scheculer.cities
+            // Populate defaults
             scheduler.Countries = Repository.PopulateDefaults(new Country());
+            FormatDates(scheduler.Countries); // Format dates to local timezone
 
-            // Query the address table, retrn the results into scheculer.cities
+            // Populate defaults
             scheduler.Addresses = Repository.PopulateDefaults(new Address());
+            FormatDates(scheduler.Addresses); // Format dates to local timezone
+
+            // Populate defaults
+            scheduler.Cities = Repository.PopulateDefaults(new City());
+            FormatDates(scheduler.Cities); // Format dates to local timezone
+        }
+
+        /* Method which an appointmnet, city, country or cusomter can be passed into to have its dates converted from
+         * UTC to the users local timezone */
+
+        private static void FormatDates<T>(BindingList<T> records)
+        {
+            foreach (var record in records)
+            {
+                // Using reflection, get the properties and values we are working with for createdate and lastupdate
+                var createDate = record.GetType().GetProperty("CreateDate");
+                var createDateValue = Convert.ToDateTime(FormatDate(createDate.GetValue(record, null).ToString()));
+                var updateDate = record.GetType().GetProperty("CreateDate");
+                var updateDateValue = Convert.ToDateTime(FormatDate(updateDate.GetValue(record, null).ToString()));
+
+                // Using reflection, update the createDate and lastUpdateDate
+                createDate.SetValue(record, createDateValue);
+                updateDate.SetValue(record, updateDateValue);
+            }
         }
 
         /* Method which shows the current weeks worth of appointmnets for the user
@@ -515,7 +585,7 @@ namespace RobertOgden
         {
             // Get the data for the option 1 report
             var report = new Option1();
-            report.GetReport(report, grid);
+            var reportList = report.ToBindingList<Option1>(grid); //this sets a datasource
 
             // Update form controls
             label.Text = "Currently displaying number of appointment types by month";
@@ -527,7 +597,14 @@ namespace RobertOgden
         {
             // Get the data for the option 2 report
             var report = new Option2();
-            report.GetReport(report, grid);
+            var reportList = report.ToBindingList<Option2>(grid); //this sets a datasource
+
+            // Format dates for local time
+            foreach (var record in reportList)
+            {
+                record.Start = Convert.ToDateTime(FormatDate(record.Start.ToString()));
+                record.End = Convert.ToDateTime(FormatDate(record.End.ToString()));
+            }
 
             // Update form controls
             grid.Columns["UserName"].DisplayIndex = 0;
@@ -541,11 +618,34 @@ namespace RobertOgden
         {
             // Get the data for the option 3 report
             var report = new Option3();
-            report.GetReport(report, grid);
-            var cityName = grid.Rows[0].Cells[0].Value;
+            var reportList = report.ToBindingList<Option3>(grid);
+
+            // Format dates for local time
+            foreach (var record in reportList)
+            {
+                record.Start = Convert.ToDateTime(FormatDate(record.Start.ToString()));
+                record.End = Convert.ToDateTime(FormatDate(record.End.ToString()));
+            }
+
             // Update form controls
+            var cityName = grid.Rows[0].Cells[0].Value;
             grid.Columns["City"].DisplayIndex = 0;
             label.Text = $"Currently displaying all appointments for {cityName}";
+        }
+
+        /* Method which restarts a timer if its stopped */
+
+        public static void RestartTimer(Timer timer)
+        {
+            if (timer == null)
+            {
+                return;
+            }
+            if (timer.Enabled)
+            {
+                return;
+            }
+            timer.Start();
         }
     }
 }

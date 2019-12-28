@@ -14,18 +14,20 @@ namespace RobertOgden
         private readonly int _userId; // The currently logged in users user ID
         private readonly string _currentUser; // The currently logged in users name
         private string _state = "VIEW"; // The state of the form
+        private Timer _timer; // Reminder timer
 
         public FrmAddresses()
         {
             InitializeComponent();
         }
 
-        public FrmAddresses(Scheduler scheduler, int userId, List<string> reminders)
+        public FrmAddresses(Scheduler scheduler, int userId, List<string> reminders, Timer timer)
         {
             // Set up gloablly used objects that are passed into the form
             _userId = userId;
             _scheduler = scheduler;
             _reminders = reminders;
+            _timer = timer;
             _currentUser = _scheduler.Users.FirstOrDefault(r => r.UserId == _userId).UserName;
 
             InitializeComponent();
@@ -51,25 +53,25 @@ namespace RobertOgden
         private void MnuAppointments_Click(object sender, EventArgs e)
         {
             // Hide current form, show new form
-            SharedUtils.OpenForm(this, new FrmAppointments(_scheduler, _userId, _reminders));
+            SharedUtils.OpenForm(this, new FrmAppointments(_scheduler, _userId, _reminders, _timer));
         }
 
         private void MnuCalendar_Click(object sender, EventArgs e)
         {
             // Hide current form, show new form
-            SharedUtils.OpenForm(this, new FrmCalendar(_scheduler, _userId, _reminders));
+            SharedUtils.OpenForm(this, new FrmCalendar(_scheduler, _userId, _reminders, _timer));
         }
 
         private void MnuCustomers_Click(object sender, EventArgs e)
         {
             // Hide current form, show new form
-            SharedUtils.OpenForm(this, new FrmCustomers(_scheduler, _userId, _reminders));
+            SharedUtils.OpenForm(this, new FrmCustomers(_scheduler, _userId, _reminders, _timer));
         }
 
         private void MnuReports_Click(object sender, EventArgs e)
         {
             // Hide current form, show new form
-            SharedUtils.OpenForm(this, new FrmReports(_scheduler, _userId, _reminders));
+            SharedUtils.OpenForm(this, new FrmReports(_scheduler, _userId, _reminders, _timer));
         }
 
         private void MnuExit_Click(object sender, EventArgs e)
@@ -513,7 +515,7 @@ namespace RobertOgden
             InitDataEntryFields();
 
             // Get the next recordID in sequence and set the default appointmentId using it
-            var nextId = SharedUtils.GetIds(DgvAddresses).Max() + 1;
+            var nextId = SharedUtils.GetNextId(DgvAddresses);
             TxtAddressId.Text = nextId.ToString();
 
             // Exit
@@ -535,16 +537,21 @@ namespace RobertOgden
             DtpLastUpdate.Value = now;
         }
 
-        private void TmrReminders_Tick(object sender, EventArgs e)
+        private void _timers_Tick(object sender, EventArgs e)
         {
-            SharedUtils.ReminderCheck(_reminders, TmrReminders);
+            SharedUtils.ReminderCheck(_reminders, _scheduler, _timers);
+            _timers.Stop();
         }
 
         private void MnuHelp_Click(object sender, EventArgs e)
         {
-            // Show help form
-            var form = new FrmHelp();
+            var form = new FrmHelp(_reminders, _scheduler, _timer);
             form.ShowDialog();
+        }
+
+        private void FrmAddresses_MouseMove(object sender, MouseEventArgs e)
+        {
+            SharedUtils.RestartTimer(_timer);
         }
     }
 }

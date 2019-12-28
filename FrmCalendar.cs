@@ -12,6 +12,7 @@ namespace RobertOgden
         private Scheduler _scheduler; // Scheduler data
         private List<string> _reminders; // Reminder data
         private int _userId; // The currently logged in users user ID
+        private Timer _timer; // Reminder timer
 
         public FrmCalendar()
         {
@@ -26,6 +27,12 @@ namespace RobertOgden
             _userId = userId;
             _scheduler = scheduler;
 
+            // Define timer
+            _timer = new Timer();
+            _timer.Interval = 1000;
+            _timer.Enabled = true;
+            _timer.Tick += new System.EventHandler(OnTimerEvent);
+
             SharedUtils.PopulateScheduler(_scheduler); // Popluate the scheduler object
 
             PopulateReminders(); // Populate the reminders object
@@ -33,12 +40,13 @@ namespace RobertOgden
             PopulateDataBoundControls(); //Populate data bound controls
         }
 
-        public FrmCalendar(Scheduler scheduler, int userId, List<string> reminders)
+        public FrmCalendar(Scheduler scheduler, int userId, List<string> reminders, Timer timer)
         {
             //Set up gloablly used objects that are passed into the form
             _userId = userId;
             _scheduler = scheduler;
             _reminders = reminders;
+            _timer = timer;
 
             InitializeComponent();
             PopulateDataBoundControls(); // Populate grid and comboboxes
@@ -56,8 +64,7 @@ namespace RobertOgden
 
         private void MnuHelp_Click(object sender, EventArgs e)
         {
-            // Show help form
-            var form = new FrmHelp();
+            var form = new FrmHelp(_reminders, _scheduler, _timer);
             form.ShowDialog();
         }
 
@@ -71,7 +78,7 @@ namespace RobertOgden
         {
             // Create a part using the selected grid item
             var appointmentId = Convert.ToInt32(DgvCalendar.CurrentRow.Cells[0].Value.ToString());
-            SharedUtils.OpenForm(this, new FrmAppointments(_scheduler, _userId, _reminders, appointmentId));
+            SharedUtils.OpenForm(this, new FrmAppointments(_scheduler, _userId, _reminders, appointmentId, _timer));
         }
 
         private void RdoMonth_CheckedChanged(object sender, EventArgs e)
@@ -95,7 +102,7 @@ namespace RobertOgden
         private void MnuAddresses_Click(object sender, EventArgs e)
         {
             // Hide current form, show new form
-            SharedUtils.OpenForm(this, new FrmAddresses(_scheduler, _userId, _reminders));
+            SharedUtils.OpenForm(this, new FrmAddresses(_scheduler, _userId, _reminders, _timer));
         }
 
         private void DtpDate_ValueChanged(object sender, EventArgs e)
@@ -107,30 +114,24 @@ namespace RobertOgden
         private void MnuAppointments_Click(object sender, EventArgs e)
         {
             // Hide current form, show new form
-            SharedUtils.OpenForm(this, new FrmAppointments(_scheduler, _userId, _reminders));
+            SharedUtils.OpenForm(this, new FrmAppointments(_scheduler, _userId, _reminders, _timer));
         }
 
         private void MnuCustomers_Click(object sender, EventArgs e)
         {
             // Hide current form, show new form
-            SharedUtils.OpenForm(this, new FrmCustomers(_scheduler, _userId, _reminders));
+            SharedUtils.OpenForm(this, new FrmCustomers(_scheduler, _userId, _reminders, _timer));
         }
 
         private void MnuReports_Click(object sender, EventArgs e)
         {
             // Hide current form, show new form
-            SharedUtils.OpenForm(this, new FrmReports(_scheduler, _userId, _reminders));
+            SharedUtils.OpenForm(this, new FrmReports(_scheduler, _userId, _reminders, _timer));
         }
 
         private void MnuExit_Click(object sender, EventArgs e)
         {
             this.Close(); // Close the form
-        }
-
-        private void TmrReminders_Tick(object sender, EventArgs e)
-        {
-            // Check for reminders
-            SharedUtils.ReminderCheck(_reminders, TmrReminders);
         }
 
         /* Method which populates databound controls when the form is initialized */
@@ -216,6 +217,16 @@ namespace RobertOgden
 
             //Format datetimepicker
             DtpDate.CustomFormat = formatText;
+        }
+
+        private void FrmCalendar_MouseMove(object sender, MouseEventArgs e)
+        {
+            _timers.Start();
+        }
+
+        public void OnTimerEvent(object source, EventArgs e)
+        {
+            SharedUtils.ReminderCheck(_reminders, _scheduler, _timer);
         }
     }
 }

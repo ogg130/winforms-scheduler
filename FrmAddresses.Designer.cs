@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.TmrReminders = new System.Windows.Forms.Timer(this.components);
+            this._timers = new System.Windows.Forms.Timer(this.components);
             this.MnuExit = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuReports = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuCustomers = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,9 +75,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.DgvAddresses)).BeginInit();
             this.SuspendLayout();
             // 
-            // TmrReminders
+            // _timers
             // 
-            this.TmrReminders.Tick += new System.EventHandler(this.TmrReminders_Tick);
+            this._timers.Interval = 1000;
+            this._timers.Tick += new System.EventHandler(this._timers_Tick);
             // 
             // MnuExit
             // 
@@ -489,6 +490,7 @@
             this.Controls.Add(this.GrpAddresses);
             this.Name = "FrmAddresses";
             this.Text = "Addresses";
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FrmAddresses_MouseMove);
             this.MnuMenu.ResumeLayout(false);
             this.MnuMenu.PerformLayout();
             this.GrpAddresses.ResumeLayout(false);
@@ -501,7 +503,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Timer TmrReminders;
+        private System.Windows.Forms.Timer _timers;
         private System.Windows.Forms.ToolStripMenuItem MnuExit;
         private System.Windows.Forms.ToolStripMenuItem MnuReports;
         private System.Windows.Forms.ToolStripMenuItem MnuCustomers;
