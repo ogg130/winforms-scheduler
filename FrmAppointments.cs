@@ -461,8 +461,13 @@ namespace RobertOgden
             var appointmentId = Convert.ToInt32(TxtAppointmentId.Text);
 
             var overlap = _scheduler.Appointments
-                            .Where(a => a.AppointmentId != appointmentId &&
-                            (a.Start >= startDate && a.Start <= endDate && a.End >= startDate && a.End <= endDate))
+                            .Where(a => a.AppointmentId != appointmentId)
+                            .Where(a => startDate.Ticks > a.Start.Ticks)
+                            .Where(a => startDate.Ticks < a.End.Ticks)
+                            .Where(a => endDate.Ticks > a.Start.Ticks)
+                            .Where(a => endDate.Ticks < a.End.Ticks)
+
+                            //.Where(endDate <= a.End)
                             .ToList();
 
             if (overlap.Count > 0) // If there is appointment overlap

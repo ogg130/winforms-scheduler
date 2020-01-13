@@ -52,3 +52,40 @@ D:\repos\scheduler\RobertOgden-C969\obj\Debug\cs\RobertOgden.resources.dll
 D:\repos\scheduler\RobertOgden-C969\obj\Debug\fr\RobertOgden.resources.dll
 D:\repos\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.FrmAddresses.resources
 D:\repos\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.FrmHelp.resources
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\bin\Debug\RobertOgden.exe.config
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\bin\Debug\RobertOgden.exe
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\bin\Debug\RobertOgden.pdb
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\bin\Debug\aa\RobertOgden.resources.dll
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\bin\Debug\cs\RobertOgden.resources.dll
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\bin\Debug\fr\RobertOgden.resources.dll
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\bin\Debug\BouncyCastle.Crypto.dll
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\bin\Debug\Google.Protobuf.dll
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\bin\Debug\MySql.Data.dll
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\bin\Debug\MySql.Data.EntityFramework.dll
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\bin\Debug\Newtonsoft.Json.dll
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\bin\Debug\Renci.SshNet.dll
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\bin\Debug\Google.Protobuf.xml
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\bin\Debug\MySql.Data.xml
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\bin\Debug\MySql.Data.EntityFramework.xml
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\bin\Debug\Newtonsoft.Json.xml
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\bin\Debug\Renci.SshNet.xml
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.csprojAssemblyReference.cache
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.FrmAddresses.resources
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.FrmAppointments.resources
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.FrmCalendar.resources
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.FrmCustomers.resources
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.FrmLogin.resources
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.FrmReports.resources
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.FrmHelp.resources
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.Properties.Resources.resources
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.FrmLogin.aa.resources
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.FrmLogin.cs.resources
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.FrmLogin.fr.resources
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.csproj.GenerateResource.cache
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.csproj.CoreCompileInputs.cache
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\aa\RobertOgden.resources.dll
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\cs\RobertOgden.resources.dll
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\fr\RobertOgden.resources.dll
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.csproj.CopyComplete
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.exe
+D:\School\Software Development\C969-Software_II-Advanced_C#\scheduler\RobertOgden-C969\obj\Debug\RobertOgden.pdb
